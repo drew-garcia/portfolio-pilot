@@ -1,39 +1,36 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
-interface LoginProps {
-  onSubmit: (email: string, password: string) => void;
-}
+const SignUp: FC = () => {
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string()
+      .min(6, 'Password must be at least 6 characters')
+      .required('Password is required'),
+  });
 
-const Login: React.FC<LoginProps> = ({ onSubmit }) => {
+  const handleSubmit = (values: any) => {
+    console.log('Sign up data: ', values);
+    // make an API call to submit the sign-up data to the server
+  };
+
   return (
     <Formik
       initialValues={{ email: '', password: '' }}
-      validate={(values) => {
-        const errors: { email?: string; password?: string } = {};
-        if (!values.email) {
-          errors.email = 'Email is required';
-        }
-        if (!values.password) {
-          errors.password = 'Password is required';
-        }
-        return errors;
-      }}
-      onSubmit={(values, { setSubmitting }) => {
-        onSubmit(values.email, values.password);
-        setSubmitting(false);
-      }}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (
         <Form className='bg-white p-6 rounded-lg shadow-md'>
-          <h2 className='text-lg font-medium mb-4'>Login</h2>
+          <h2 className='text-lg font-medium mb-4'>Signup</h2>
           <div className='mb-4'>
             <label className='block font-medium mb-2' htmlFor='email'>
               Email:
             </label>
             <Field
-              name='email'
               type='email'
+              name='email'
               className='bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500'
             />
             <ErrorMessage
@@ -47,8 +44,8 @@ const Login: React.FC<LoginProps> = ({ onSubmit }) => {
               Password:
             </label>
             <Field
-              name='password'
               type='password'
+              name='password'
               className='bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500'
             />
             <ErrorMessage
@@ -62,7 +59,7 @@ const Login: React.FC<LoginProps> = ({ onSubmit }) => {
             type='submit'
             disabled={isSubmitting}
           >
-            Login
+            Sign Up
           </button>
         </Form>
       )}
@@ -70,4 +67,4 @@ const Login: React.FC<LoginProps> = ({ onSubmit }) => {
   );
 };
 
-export default Login;
+export default SignUp;
