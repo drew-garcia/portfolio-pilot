@@ -1,6 +1,24 @@
 import Head from 'next/head';
+import clientPromise from '../lib/mongodb';
+import { InferGetServerSidePropsType } from 'next';
 
-export default function Home() {
+export async function getServerSideProps(_context: any) {
+  try {
+    await clientPromise;
+    return {
+      props: { isConnected: true },
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      props: { isConnected: false },
+    };
+  }
+}
+
+export default function Home({
+  isConnected,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <Head>
@@ -9,6 +27,14 @@ export default function Home() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
+      {isConnected ? (
+        <div className='mx-auto text-align font-sans text-yellow-300 font-bold'>
+          You are connected to MongoDB
+        </div>
+      ) : (
+        <>Not connected</>
+      )}
+      <div></div>
       <main>Main</main>
     </>
   );
