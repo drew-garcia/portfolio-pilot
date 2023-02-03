@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import clientPromise from '../lib/mongodb';
-import { InferGetServerSidePropsType } from 'next';
+import { InferGetStaticPropsType } from 'next';
 
-export async function getServerSideProps(_context: any) {
+export async function getStaticProps(_context: any) {
   try {
     await clientPromise;
     return {
@@ -18,7 +18,7 @@ export async function getServerSideProps(_context: any) {
 
 export default function Home({
   isConnected,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
       <Head>
